@@ -55,8 +55,4 @@ class Greedy
     assignments.row(team_index).sum
   end
 
-  def matrix_pretty_print(matrix)
-    puts "\n"
-    puts matrix.to_a.map(&:inspect)
-  end
 end
