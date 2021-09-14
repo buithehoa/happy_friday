@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require "main"
 
 RSpec.describe Main do
-  describe 'With sample input' do
+  describe 'With sample_input' do
     before(:all) do
       @params = [
-        'spec/fixtures/files/performance.csv',
-        'spec/fixtures/files/tasks.csv',
-        'spec/fixtures/files/teams.csv',
+        'spec/fixtures/files/sample_input/performance.csv',
+        'spec/fixtures/files/sample_input/tasks.csv',
+        'spec/fixtures/files/sample_input/teams.csv',
         '/tmp',
       ]
       @file_path = Main.new(*@params).run
