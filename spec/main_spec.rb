@@ -6,11 +6,11 @@ RSpec.describe Main do
   describe 'With sample_input' do
     before(:all) do
       @params = [
-        'spec/fixtures/files/sample_input/performance.csv',
-        'spec/fixtures/files/sample_input/tasks.csv',
-        'spec/fixtures/files/sample_input/teams.csv',
-        '/tmp',
-      ]
+          'spec/fixtures/files/sample_input/performance.csv',
+          'spec/fixtures/files/sample_input/tasks.csv',
+          'spec/fixtures/files/sample_input/teams.csv',
+          '/tmp',
+        ]
       @file_path = Main.new(*@params).run
       @csv_string = CSV.read(@file_path, headers: true).to_csv
     end

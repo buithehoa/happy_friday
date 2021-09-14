@@ -33,13 +33,12 @@ class CSVHandler
       rows = []
       CSV.foreach(performance_csv, csv_options).map do |performance|
         workload.team_names << performance[:team]
-
         rows << CSV.foreach(tasks_csv, csv_options).map do |task|
-          workload.task_ids << task[:task_id]
           team_effort(performance, task)
         end
       end
 
+      workload.task_ids = task_ids(tasks_csv)
       workload.estimated_effort = Matrix.rows(rows)
       workload.timezone_offsets = timezone_offsets(teams_csv)
       workload
@@ -53,6 +52,10 @@ class CSVHandler
     WORKDAY_START_TIME = '09:00'
     HOUR_IN_SECONDS = 3600
     TIME_FORMAT = '%I:%M %p'
+
+    def task_ids(tasks_csv)
+      CSV.foreach(tasks_csv, csv_options).map { |task| task[:task_id] }
+    end
 
     def default_start_time(timezone_offset)
       Time.parse("#{WORKDAY_START_TIME} #{timezone_offset_str(timezone_offset)}")

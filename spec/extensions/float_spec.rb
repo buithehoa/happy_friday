@@ -2,7 +2,7 @@
 
 require "extensions/float"
 
-RSpec.describe Float do
+RSpec.describe Extensions::Float do
   before(:all) do
     Float.include Extensions::Float
   end
