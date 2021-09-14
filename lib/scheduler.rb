@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'node'
-require_relative 'effort'
 
 class Scheduler
   attr_reader :step_count
