@@ -15,21 +15,18 @@ class Main
   def run
     begin
       workload = CSVHandler.workload(@performance_csv, @tasks_csv, @teams_csv)
+      scheduler = Scheduler.new(workload.estimated_effort, workload.timezone_offsets)
 
-      puts workload.estimated_effort.to_a.map(&:inspect)
-      puts "Timezone offsets: #{workload.timezone_offsets.inspect}"
+      schedule = scheduler.run
+      file_path = CSVHandler.export_schedule(schedule, workload, @output_path)
+
+      puts "Processing step count: #{scheduler.step_count}"
+      puts "Exported file path: #{file_path}"
+
     # rescue StandardError => error
     #   puts "[ERROR] #{error.message}"
     # TODO: Write backtrace to log files
     end
 
-    scheduler = Scheduler.new(workload.estimated_effort, workload.timezone_offsets)
-    schedule = scheduler.run
-
-    puts "\nSchedule:"
-    puts schedule.to_a.map(&:inspect)
-    puts "Step count: #{scheduler.step_count}"
-
-    puts CSVHandler.export_schedule(schedule, workload, @output_path)
   end
 end
