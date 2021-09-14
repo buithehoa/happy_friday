@@ -2,7 +2,7 @@
 
 require 'csv'
 require 'time'
-require_relative 'workload'
+require_relative 'scheduler/workload'
 require_relative 'extensions/float'
 
 Float.include Extensions::Float
@@ -11,8 +11,7 @@ class CSVHandler
   class << self
 
     def export_schedule(schedule, workload, output_path)
-      # file_path = "#{output_path}/schedule-#{timestamp}.csv"
-      file_path = "#{output_path}/schedule.csv"
+      file_path = "#{output_path}/schedule-#{timestamp}.csv"
 
       CSV.open(file_path, 'wb') do |csv|
         csv << ['Team', 'Local Time', 'UTC Time', 'Task No']
@@ -27,8 +26,9 @@ class CSVHandler
       file_path
     end
 
+    # Returns a Workload object which encapsulates data specified in CSV input files.
     def workload(performance_csv, tasks_csv, teams_csv)
-      workload = Workload.new
+      workload = Scheduler::Workload.new
 
       rows = []
       CSV.foreach(performance_csv, csv_options).map do |performance|

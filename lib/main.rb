@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'matrix'
-require_relative 'scheduler'
+require_relative 'scheduler/branch_and_bound'
 require_relative 'csv_handler'
 
 class Main
@@ -15,7 +15,7 @@ class Main
   def run
     begin
       workload = CSVHandler.workload(@performance_csv, @tasks_csv, @teams_csv)
-      scheduler = Scheduler.new(workload.estimated_effort, workload.timezone_offsets)
+      scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)
 
       schedule = scheduler.run
       file_path = CSVHandler.export_schedule(schedule, workload, @output_path)
@@ -23,8 +23,9 @@ class Main
       puts "Processing step count: #{scheduler.step_count}"
       puts "Exported file path: #{file_path}"
 
-    # rescue StandardError => error
-    #   puts "[ERROR] #{error.message}"
+      file_path
+    rescue StandardError => error
+      puts "[ERROR] #{error.message}"
     # TODO: Write backtrace to log files
     end
 
