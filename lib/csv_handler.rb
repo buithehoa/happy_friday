@@ -1,26 +1,30 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'time'
 require_relative 'workload'
+require_relative 'extensions/float'
+
+Float.include Extensions::Float
 
 class CSVHandler
   class << self
 
     def export_schedule(schedule, workload, output_path)
-      file_path = "#{output_path}/schedule-#{timestamp}.csv"
+      # file_path = "#{output_path}/schedule-#{timestamp}.csv"
+      file_path = "#{output_path}/schedule.csv"
 
       CSV.open(file_path, 'wb') do |csv|
-        csv << [ 'Team', 'Local Time', 'UTC Time', 'Task No' ]
+        csv << ['Team', 'Local Time', 'UTC Time', 'Task No']
 
-        schedule.column_vectors.each_with_index do |value, index|
-          team_index = value.to_a.index { |e| e > 0.0 }
-
-          csv << [ workload.team_names[team_index], 'x', 'x', workload.task_ids[index]]
+        schedule.row_vectors.each_with_index do |value, index|
+          team_assignments(value, index, workload).each do |team_assignment|
+             csv << team_assignment
+          end
         end
       end
 
-      # Handles the case when output_path includes a trailing forward slash
-      file_path.gsub('//', '/')
+      file_path
     end
 
     def workload(performance_csv, tasks_csv, teams_csv)
@@ -46,14 +50,58 @@ class CSVHandler
     TIMEZONE_PATTERN = /\A((\+|\-)?(\d)+)\s(\w+)\z/
     NUMBER_OF_HOURS_PATTERN = /\A(\d)+ hour(s)?\z/
     TIMESTAMP_FORMAT = '%Y%m%d-%H%M%S'
+    WORKDAY_START_TIME = '09:00'
+    HOUR_IN_SECONDS = 3600
+    TIME_FORMAT = '%I:%M %p'
+
+    def default_start_time(timezone_offset)
+      Time.parse("#{WORKDAY_START_TIME} #{timezone_offset_str(timezone_offset)}")
+    end
+
+    # Return rows which represent scheduled tasks for the specified team.
+    def team_assignments(team_tasks, team_id, workload)
+      start_time = default_start_time(workload.timezone_offsets[team_id])
+
+      team_tasks.each_with_index.map do |effort, task_index|
+        next if effort == 0.0
+        end_time = start_time + (effort.round_up_to_quarter * HOUR_IN_SECONDS)
+        local_period = period_str(start_time, end_time)
+        utc_period = period_str(start_time.utc, end_time.utc)
+        start_time = end_time
+
+        [ workload.team_names[team_id], local_period, utc_period, workload.task_ids[task_index] ]
+      end.compact
+    end
+
+    def period_str(start_time, end_time)
+      "#{start_time.strftime(TIME_FORMAT)} - #{end_time.strftime(TIME_FORMAT)}"
+    end
+
+    # Returns a string representation of a timezone_offset.
+    # Examples:
+    #   0 => '00:00'
+    #   3 => '+03:00'
+    # -12 => '-12:00'
+    def timezone_offset_str(timezone_offset)
+      str = "#{timezone_offset.to_s.rjust(2, '0')}:00"
+
+      if timezone_offset > 0
+        "+#{str}"
+      elsif timezone_offset < 0
+        "-#{str}"
+      else
+        'UTC'
+      end
+    end
 
     def timestamp
       Time.now.strftime(TIMESTAMP_FORMAT)
     end
 
+    # Returns an array of timezone offsets pulled from input CSV file.
     def timezone_offsets(teams_csv)
       CSV.foreach(teams_csv, csv_options).map do |team|
-        team[:timezone].match(TIMEZONE_PATTERN).captures.first.to_f
+        team[:timezone].match(TIMEZONE_PATTERN).captures.first.to_i
       end
     end
 

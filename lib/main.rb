@@ -9,7 +9,7 @@ class Main
     @performance_csv = performance_csv
     @tasks_csv = tasks_csv
     @teams_csv = teams_csv
-    @output_path = output_path
+    @output_path = output_path.chomp('/')
   end
 
   def run
@@ -20,6 +20,7 @@ class Main
       puts "Timezone offsets: #{workload.timezone_offsets.inspect}"
     # rescue StandardError => error
     #   puts "[ERROR] #{error.message}"
+    # TODO: Write backtrace to log files
     end
 
     scheduler = Scheduler.new(workload.estimated_effort, workload.timezone_offsets)

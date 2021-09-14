@@ -51,8 +51,7 @@ class Scheduler
       assignments = empty_assignments
       assignments[team_index, task_index] = value
 
-      effort = Effort.new(value, team_index, task_index)
-      Node.new(effort, assignments, [ task_index ])
+      Node.new(assignments, [ task_index ])
     end
   end
 

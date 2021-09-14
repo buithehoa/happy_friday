@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class Node
-  attr_accessor :effort
   attr_accessor :assignments
   attr_accessor :assigned_task_indices
 
-  def initialize(effort, assignments, assigned_task_indices)
-    @effort = effort
+  def initialize(assignments, assigned_task_indices)
     @assignments = assignments
     @assigned_task_indices = assigned_task_indices
   end
@@ -17,9 +15,8 @@ class Node
         child_assignments = assignments.dup
         child_assignments[team_index, task_index] = value
 
-        child_effort = Effort.new(value, team_index, task_index)
         child_assigned_task_indices = @assigned_task_indices.dup.append(task_index)
-        Node.new(child_effort, child_assignments, child_assigned_task_indices)
+        Node.new(child_assignments, child_assigned_task_indices)
       end
     end.compact
   end
