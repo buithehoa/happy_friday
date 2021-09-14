@@ -14,9 +14,7 @@ class Main
 
   def run
     begin
-      workload = CSVHandler.workload(@performance_csv, @tasks_csv, @teams_csv)
-      scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)
-
+      scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)      
       schedule = scheduler.run
       file_path = CSVHandler.export_schedule(schedule, workload, @output_path)
 
@@ -28,6 +26,11 @@ class Main
       puts "[ERROR] #{error.message}"
     # TODO: Write backtrace to log files
     end
+  end
 
+  private
+
+  def workload
+    @workload ||= CSVHandler.workload(@performance_csv, @tasks_csv, @teams_csv)
   end
 end
