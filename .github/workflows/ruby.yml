@@ -33,3 +33,9 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - name: Run tests
       run: bundle exec rspec
+      env:
+        GITHUB_USER: buithehoa
+        GITHUB_MAIL: buithehoa@gmail.com
+        GITHUB_ORG: buithehoa
+        GITHUB_REPO: happy_friday
+        GITHUB_ACCESS_TOKEN: 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
