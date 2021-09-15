@@ -20,10 +20,9 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![MIT License][license-shield]][license-url]
+[![main Actions Status](https://github.com/buithehoa/happy_friday/workflows/Ruby/badge.svg)](https://github.com/buithehoa/happy_friday/actions)
 
 <!-- PROJECT LOGO -->
-<br />
 <p align="center">
   <h3 align="center">Happy Friday</h3>
 
