@@ -62,7 +62,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[Happy Friday Project Requirements](https://gist.github.com/tuykin/1671929728622749680def59d90910c7){:target="_blank"}
+[Happy Friday Project Requirements](https://gist.github.com/tuykin/1671929728622749680def59d90910c7)
 
 ### Built With
 
@@ -124,7 +124,21 @@ Finished in 0.02401 seconds (files took 0.10174 seconds to load)
 13 examples, 0 failures
 ```
 
-## Code Nagivation
+## Code Navigation
+1. The entry point of the program is `Main#run` which is called in `bin/schedule` as follows
+  ```ruby
+  Main.new(*ARGV).run
+  ```
+
+1. The scheduling algorithm is implemented in `Scheduler::BranchAndBound` using 2 supproting models: `Scheduler::Node` and `Scheduler::Workload` which can be found under `lib/scheduler`. The algorithm is executed as follows in `Main`
+  ```ruby
+  scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)      
+  schedule = scheduler.run  
+  ```
+
+1. The functionality of `CSVHandler` class is to
+  * Read input CSV files to collect input data
+  * Export calculated schedule to CSV files
 
 <!-- CONTACT -->
 ## Contact
