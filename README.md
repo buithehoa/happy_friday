@@ -129,12 +129,12 @@ Finished in 0.02401 seconds (files took 0.10174 seconds to load)
   ```ruby
   Main.new(*ARGV).run
   ```
-1. The scheduling algorithm is implemented in `Scheduler::BranchAndBound` and 2 supporting models: `Scheduler::Node` and `Scheduler::Workload` which can be found under `lib/scheduler`. The algorithm is triggered as follows in `Main`
+2. The scheduling algorithm is implemented in `Scheduler::BranchAndBound` and 2 supporting models: `Scheduler::Node` and `Scheduler::Workload` which can be found under `lib/scheduler`. The algorithm is triggered as follows in `Main`
   ```ruby
   scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)      
   schedule = scheduler.run  
   ```
-1. The functionality of `CSVHandler` class includes
+3. The functionality of `CSVHandler` class includes
   * Read input CSV files to collect input data
   * Export calculated schedule to CSV files
 
