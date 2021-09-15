@@ -13,10 +13,10 @@ module Scheduler
     def child_nodes(estimated_effort)
       estimated_effort.each_with_index.map do |value, team_index, task_index|
         unless @assigned_task_indices.include?(task_index)
-          child_assignments = assignments.dup
+          child_assignments = @assignments.dup
           child_assignments[team_index, task_index] = value
-
           child_assigned_task_indices = @assigned_task_indices.dup.append(task_index)
+
           Node.new(child_assignments, child_assigned_task_indices)
         end
       end.compact
