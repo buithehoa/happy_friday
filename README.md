@@ -20,7 +20,8 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![main Actions Status](https://github.com/buithehoa/happy_friday/workflows/Ruby/badge.svg)](https://github.com/buithehoa/happy_friday/actions)
+[![main Actions Status](https://github.com/buithehoa/happy_friday/workflows/Ruby/badge.svg)](https://github.com/buithehoa/happy_friday/actions)&nbsp;
+[![Coverage](https://buithehoa.github.io/happy_friday/badge.svg)](https://github.com/buithehoa/happy_friday)
 
 <!-- PROJECT LOGO -->
 <p align="center">

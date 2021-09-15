@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "main"
+require 'spec_helper'
+require 'main'
 
 RSpec.describe Main do
   describe 'With sample_input' do

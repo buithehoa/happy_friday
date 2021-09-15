@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "extensions/float"
+require 'spec_helper'
+require 'extensions/float'
 
 RSpec.describe Extensions::Float do
   before(:all) do

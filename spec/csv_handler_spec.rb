@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "csv_handler"
+require 'spec_helper'
+require 'csv_handler'
 
 RSpec.describe CSVHandler do
   describe "#workload" do
