@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require 'matrix'
 require_relative 'node'
 
 module Scheduler
   class BranchAndBound
     attr_reader :step_count
+    attr_reader :minimum_makespan
 
     def initialize(estimated_effort, timezone_offsets)
       @estimated_effort = estimated_effort
