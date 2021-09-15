@@ -9,7 +9,7 @@ RSpec.describe Main do
           'spec/fixtures/files/sample_input/performance.csv',
           'spec/fixtures/files/sample_input/tasks.csv',
           'spec/fixtures/files/sample_input/teams.csv',
-          './',
+          'tmp/',
         ]
       @file_path = Main.new(*@params).run
       @csv_string = CSV.read(@file_path, headers: true).to_csv
@@ -21,7 +21,7 @@ RSpec.describe Main do
 
     it "should save exported file to the specified output path" do
 
-      expect(@file_path).to include('/tmp')
+      expect(@file_path).to include('tmp')
       expect(File.exist?(@file_path)).to be_truthy
     end
 
