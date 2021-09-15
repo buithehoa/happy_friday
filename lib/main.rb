@@ -14,7 +14,7 @@ class Main
 
   def run
     begin
-      scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)      
+      scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)
       schedule = scheduler.run
       file_path = CSVHandler.export_schedule(schedule, workload, @output_path)
 

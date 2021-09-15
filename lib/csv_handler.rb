@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'matrix'
 require 'time'
 require_relative 'scheduler/workload'
 require_relative 'extensions/float'
