@@ -119,7 +119,7 @@ London,02:00 PM - 06:00 PM,02:00 PM - 06:00 PM,3
 ## Testing
 To run all specs, execute `rspec`
 ```
-$ rspec
+$ bundle exec rspec
 Finished in 0.02401 seconds (files took 0.10174 seconds to load)
 13 examples, 0 failures
 ```
