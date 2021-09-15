@@ -62,7 +62,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[Happy Friday Project Requirements](https://gist.github.com/tuykin/1671929728622749680def59d90910c7)
+[Happy Friday Project Requirements](https://gist.github.com/tuykin/1671929728622749680def59d90910c7){:target="_blank"}
 
 ### Built With
 
