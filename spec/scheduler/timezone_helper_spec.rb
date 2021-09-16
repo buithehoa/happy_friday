@@ -3,8 +3,8 @@
 require 'spec_helper'
 require 'scheduler/timezone_helper'
 
-RSpec.describe TimezoneHelper do
-  include TimezoneHelper
+RSpec.describe Scheduler::TimezoneHelper do
+  include Scheduler::TimezoneHelper
 
   describe "#timezone_offset_str" do
     it "should return UTC with 0.0 as input" do

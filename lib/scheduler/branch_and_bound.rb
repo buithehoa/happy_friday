@@ -7,7 +7,7 @@ require_relative 'timezone_helper'
 
 module Scheduler
   class BranchAndBound
-    include TimezoneHelper
+    include Scheduler::TimezoneHelper
 
     attr_reader :step_count
     attr_reader :minimum_makespan

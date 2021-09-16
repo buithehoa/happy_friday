@@ -12,7 +12,7 @@ Float.include Extensions::Float
 
 class CSVHandler
   class << self
-    include TimezoneHelper
+    include Scheduler::TimezoneHelper
 
     def export_schedule(schedule, workload, output_path)
       file_path = "#{output_path}/schedule-#{timestamp}.csv"
