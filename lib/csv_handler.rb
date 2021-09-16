@@ -106,7 +106,7 @@ class CSVHandler
     end
 
     def engineer_effort(time_str, performance_str)
-      time = time_str.match(NUMBER_OF_HOURS_PATTERN).captures.first.to_f
+      time = time_str.strip.match(NUMBER_OF_HOURS_PATTERN).captures.first.to_f
       performance = performance_str.to_f
 
       time / performance

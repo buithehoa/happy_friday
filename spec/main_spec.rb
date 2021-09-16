@@ -3,12 +3,17 @@
 require 'spec_helper'
 require 'main'
 
+RSpec.shared_examples "There are no feasible schedules." do
+  it "should write a message to stdout" do
+    message = "[Scheduler::SchedulingException] It's not feasible for teams to complete tasks on Friday.\n"
+    expect { Main.new(*@params).run }.to output(message).to_stdout
+  end
+end
+
 RSpec.describe Main do
   def schedule_and_export(params)
-    begin
-      @file_path = Main.new(*params).run
-      @csv_string = CSV.read(@file_path, headers: true).to_csv
-    rescue; end;
+    @file_path = Main.new(*params).run
+    @csv_string = CSV.read(@file_path, headers: true).to_csv unless @file_path.nil?
   end
 
   context 'With sample_input' do
@@ -58,10 +63,7 @@ RSpec.describe Main do
       schedule_and_export(@params)
     end
 
-    it "should write a message to stdout" do
-      message = "[Scheduler::SchedulingException] It's not feasible for teams to complete tasks on Friday.\n"
-      expect { Main.new(*@params).run }.to output(message).to_stdout
-    end
+    it_behaves_like "There are no feasible schedules."
   end
 
   context %(With 01_early_timezones:
@@ -83,5 +85,21 @@ RSpec.describe Main do
       expect(@csv_string).to include("Solomon Islands,Fri 09:00 AM - Sat 01:00 AM,Thu 10:00 PM - Fri 02:00 PM,2\n")
       expect(@csv_string).to include("Fiji,Fri 09:00 AM - Sat 01:00 AM,Thu 11:00 PM - Fri 03:00 PM,3\n")
     end
+  end
+
+  context %(With 02_too_many_tasks:
+    02_early_timezones includes a number of tasks that teams can't complete on time.) do
+
+    before(:all) do
+      @params = [
+        'spec/fixtures/files/02_too_many_tasks/performance.csv',
+        'spec/fixtures/files/02_too_many_tasks/tasks.csv',
+        'spec/fixtures/files/02_too_many_tasks/teams.csv',
+        '/tmp',
+      ]
+      schedule_and_export(@params)
+    end
+
+    it_behaves_like "There are no feasible schedules."
   end
 end
