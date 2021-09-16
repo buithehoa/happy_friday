@@ -5,14 +5,15 @@ module TimezoneHelper
   # Examples:
   #   0 => '00:00'
   #   3 => '+03:00'
+  #  -7 => '-07:00'
   # -12 => '-12:00'
   def timezone_offset_str(timezone_offset)
-    str = "#{timezone_offset.to_s.rjust(2, '0')}:00"
+    str = "#{timezone_offset.abs.to_s.rjust(2, '0')}:00"
 
     if timezone_offset > 0
       "+#{str}"
     elsif timezone_offset < 0
-      "#{str}"
+      "-#{str}"
     else
       'UTC'
     end

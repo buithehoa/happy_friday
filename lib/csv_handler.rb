@@ -35,7 +35,7 @@ class CSVHandler
 
       rows = []
       CSV.foreach(performance_csv, csv_options).map do |performance|
-        workload.team_names << performance[:team]
+        workload.team_names << performance[:team].strip
         rows << CSV.foreach(tasks_csv, csv_options).map do |task|
           team_effort(performance, task)
         end
@@ -50,7 +50,7 @@ class CSVHandler
     private
 
     TIMEZONE_PATTERN = /\A((\+|\-)?(\d)+)\s(\w+)\z/
-    NUMBER_OF_HOURS_PATTERN = /\A(\d)+ hour(s)?\z/
+    NUMBER_OF_HOURS_PATTERN = /\A(\d+|\d+\.\d+) hour(s)?\z/
     TIMESTAMP_FORMAT = '%Y%m%d-%H%M%S'
     WORKDAY_START_TIME = '2021-09-17 09:00' # Pick any Friday
     HOUR_IN_SECONDS = 3600
@@ -90,7 +90,7 @@ class CSVHandler
     # Returns an array of timezone offsets pulled from input CSV file.
     def timezone_offsets(teams_csv)
       CSV.foreach(teams_csv, csv_options).map do |team|
-        team[:timezone].match(TIMEZONE_PATTERN).captures.first.to_i
+        team[:timezone].strip.match(TIMEZONE_PATTERN).captures.first.to_i
       end
     end
 

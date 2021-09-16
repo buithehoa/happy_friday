@@ -83,7 +83,7 @@ RSpec.describe Main do
     it "should create an optimal schedule" do
       expect(@csv_string).to include("Papua New Guinea,Fri 09:00 AM - Sat 01:00 AM,Thu 11:00 PM - Fri 03:00 PM,1\n")
       expect(@csv_string).to include("Solomon Islands,Fri 09:00 AM - Sat 01:00 AM,Thu 10:00 PM - Fri 02:00 PM,2\n")
-      expect(@csv_string).to include("Fiji,Fri 09:00 AM - Sat 01:00 AM,Thu 11:00 PM - Fri 03:00 PM,3\n")
+      expect(@csv_string).to include("Fiji,Fri 09:00 AM - Sat 01:00 AM,Thu 09:00 PM - Fri 01:00 PM,3\n")
     end
   end
 
@@ -101,5 +101,25 @@ RSpec.describe Main do
     end
 
     it_behaves_like "There are no feasible schedules."
+  end
+
+  context %(With 03_redundant_teams:
+    03_redundant_teams includes more teams than tasks) do
+
+    before(:all) do
+      @params = [
+        'spec/fixtures/files/03_redundant_teams/performance.csv',
+        'spec/fixtures/files/03_redundant_teams/tasks.csv',
+        'spec/fixtures/files/03_redundant_teams/teams.csv',
+        '/tmp',
+      ]
+      schedule_and_export(@params)
+    end
+
+    it "should create an optimal schedule" do
+      expect(@csv_string).to include("Maldives,Fri 09:00 AM - Fri 05:30 PM,Fri 04:00 AM - Fri 12:30 PM,3\n")
+      expect(@csv_string).to include("Azerbaijan,Fri 09:00 AM - Fri 05:00 PM,Fri 05:00 AM - Fri 01:00 PM,1\n")
+      expect(@csv_string).to include("Moscow,Fri 09:00 AM - Fri 03:30 PM,Fri 06:00 AM - Fri 12:30 PM,2\n")
+    end
   end
 end
