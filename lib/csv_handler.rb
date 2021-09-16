@@ -3,13 +3,15 @@
 require 'csv'
 require 'matrix'
 require 'time'
-require_relative 'scheduler/workload'
 require_relative 'extensions/float'
+require_relative 'scheduler/timezone_helper'
+require_relative 'scheduler/workload'
 
 Float.include Extensions::Float
 
 class CSVHandler
   class << self
+    include TimezoneHelper
 
     def export_schedule(schedule, workload, output_path)
       file_path = "#{output_path}/schedule-#{timestamp}.csv"
@@ -79,23 +81,6 @@ class CSVHandler
 
     def period_str(start_time, end_time)
       "#{start_time.strftime(TIME_FORMAT)} - #{end_time.strftime(TIME_FORMAT)}"
-    end
-
-    # Returns a string representation of a timezone_offset.
-    # Examples:
-    #   0 => '00:00'
-    #   3 => '+03:00'
-    # -12 => '-12:00'
-    def timezone_offset_str(timezone_offset)
-      str = "#{timezone_offset.to_s.rjust(2, '0')}:00"
-
-      if timezone_offset > 0
-        "+#{str}"
-      elsif timezone_offset < 0
-        "-#{str}"
-      else
-        'UTC'
-      end
     end
 
     def timestamp

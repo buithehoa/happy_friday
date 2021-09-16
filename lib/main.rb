@@ -22,9 +22,8 @@ class Main
       puts "Exported file path: #{file_path}"
 
       file_path
-    rescue StandardError => error
-      puts "[ERROR] #{error.message}"
-    # TODO: Write backtrace to log files
+    rescue Scheduler::SchedulingException => e
+      puts "[#{e.class.name}] #{e.message}"
     end
   end
 

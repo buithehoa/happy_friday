@@ -4,7 +4,14 @@ require 'spec_helper'
 require 'main'
 
 RSpec.describe Main do
-  describe 'With sample_input' do
+  def schedule_and_export(params)
+    begin
+      @file_path = Main.new(*params).run
+      @csv_string = CSV.read(@file_path, headers: true).to_csv
+    rescue; end;
+  end
+
+  context 'With sample_input' do
     before(:all) do
       @params = [
           'spec/fixtures/files/sample_input/performance.csv',
@@ -12,8 +19,7 @@ RSpec.describe Main do
           'spec/fixtures/files/sample_input/teams.csv',
           '/tmp',
         ]
-      @file_path = Main.new(*@params).run
-      @csv_string = CSV.read(@file_path, headers: true).to_csv
+      schedule_and_export(@params)
     end
 
     it "should write the exported file path to stdout" do
@@ -21,7 +27,6 @@ RSpec.describe Main do
     end
 
     it "should save exported file to the specified output path" do
-
       expect(@file_path).to include('/tmp')
       expect(File.exist?(@file_path)).to be_truthy
     end
@@ -35,6 +40,27 @@ RSpec.describe Main do
       expect(@csv_string).to include("Moscow,10:00 AM - 04:00 PM,10:00 AM - 04:00 PM,4\n")
       expect(@csv_string).to include("London,09:00 AM - 02:00 PM,09:00 AM - 02:00 PM,2\n")
       expect(@csv_string).to include("London,02:00 PM - 06:00 PM,02:00 PM - 06:00 PM,3\n")
+    end
+  end
+
+  # 00_late_timezones includes teams at late timezones.
+  # With the specified values of effort required, the teams won't be able to complete all tasks on time.
+  context %(With 00_late_timezones:
+    00_late_timezones includes teams at late timezones.
+    With the specified values of effort required, the teams won't be able to complete all the tasks on time.) do
+    before(:all) do
+      @params = [
+        'spec/fixtures/files/00_late_timezones/performance.csv',
+        'spec/fixtures/files/00_late_timezones/tasks.csv',
+        'spec/fixtures/files/00_late_timezones/teams.csv',
+        '/tmp',
+      ]
+      schedule_and_export(@params)
+    end
+
+    it "should write a message to stdout" do
+      message = "[Scheduler::SchedulingException] It's not feasible to schedule tasks to be completed on Friday.\n"
+      expect { Main.new(*@params).run }.to output(message).to_stdout
     end
   end
 end

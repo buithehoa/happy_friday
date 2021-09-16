@@ -2,9 +2,13 @@
 
 require 'matrix'
 require_relative 'node'
+require_relative 'scheduling_exception'
+require_relative 'timezone_helper'
 
 module Scheduler
   class BranchAndBound
+    include TimezoneHelper
+
     attr_reader :step_count
     attr_reader :minimum_makespan
 
@@ -43,10 +47,38 @@ module Scheduler
         @step_count += 1
       end
 
-      assignments
+      verify_feasibility(assignments, @timezone_offsets)
     end
 
     private
+
+    HOUR_IN_SECONDS = 3600
+    WORKDAY_START_TIME = '09:00'
+
+    # Returns true if tasks can be completed before midnight UTC.
+    # Raises an exception when the tasks can't be completed on time.
+    def verify_feasibility(assignments, timezone_offsets)
+      if completed_on_time?(assignments, timezone_offsets)
+        assignments
+      else
+        raise SchedulingException.new("It's not feasible to schedule tasks to be completed on Friday.")
+      end
+    end
+
+    # Returns true if a team's tasks are done within the same day in UTC.
+    def completed_on_time?(assignments, timezone_offsets)
+      assignments.row_vectors.each_with_index.all? do |team_assignment, team_index|
+        local_start_time = Time.parse("#{WORKDAY_START_TIME} #{timezone_offset_str(timezone_offsets[team_index])}")
+        local_end_time = local_start_time
+
+        team_assignment.each_with_index do |task_effort, task_index|
+          next if task_effort == 0.0
+          local_end_time = local_end_time + (task_effort * HOUR_IN_SECONDS)
+        end
+
+        local_start_time.utc.to_date === local_end_time.utc.to_date
+      end
+    end
 
     def initialize_stack
       @estimated_effort.each_with_index.map do |value, team_index, task_index|
