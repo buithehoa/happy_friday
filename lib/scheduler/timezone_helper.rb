@@ -8,8 +8,10 @@ module TimezoneHelper
   #  -7 => '-07:00'
   # -12 => '-12:00'
   def timezone_offset_str(timezone_offset)
-    str = "#{timezone_offset.abs.to_s.rjust(2, '0')}:00"
+    hours = timezone_offset.abs.div(1).to_i
+    minutes = ((timezone_offset.abs - timezone_offset.abs.div(1)) * 60).to_i
 
+    str = "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}"
     if timezone_offset > 0
       "+#{str}"
     elsif timezone_offset < 0

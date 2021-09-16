@@ -35,7 +35,7 @@ RSpec.describe CSVHandler do
       end
 
       it "should return timezone offsets" do
-        timezone_offsets = [3, 2, 0]
+        timezone_offsets = [3.0, 2.0, 0.0]
         expect(@workload.timezone_offsets).to eql(timezone_offsets)
       end
     end

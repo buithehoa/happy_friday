@@ -58,7 +58,7 @@ class CSVHandler
 
     private
 
-    TIMEZONE_PATTERN = /\A((\+|\-)?(\d)+)\s(\w+)\z/
+    TIMEZONE_PATTERN = /\A((\+|\-)?(\d+|\d+:\d+))\s(\w+)\z/
     NUMBER_OF_HOURS_PATTERN = /\A(\d+|\d+\.\d+) hour(s)?\z/
     TIMESTAMP_FORMAT = '%Y%m%d-%H%M%S'
     WORKDAY_START_TIME = '2021-09-17 09:00' # Pick any Friday
@@ -79,9 +79,10 @@ class CSVHandler
 
       team_tasks.each_with_index.map do |effort, task_index|
         next if effort == 0.0
+
         end_time = start_time + (effort.round_up_to_quarter * HOUR_IN_SECONDS)
         local_period = period_str(start_time, end_time)
-        utc_period = period_str(start_time.utc, end_time.utc)
+        utc_period = period_str(start_time.dup.utc, end_time.dup.utc)
         start_time = end_time
 
         [ workload.team_names[team_id], local_period, utc_period, workload.task_ids[task_index] ]
@@ -99,7 +100,12 @@ class CSVHandler
     # Returns an array of timezone offsets pulled from input CSV file.
     def timezone_offsets(teams_csv)
       CSV.foreach(teams_csv, csv_options).map do |team|
-        team[:timezone].strip.match(TIMEZONE_PATTERN).captures.first.to_i
+        offset_str = team[:timezone].strip.match(TIMEZONE_PATTERN).captures.first
+        parts = offset_str.split(':')
+        hours = parts[0].to_f
+        minutes = parts[1].to_f
+
+        hours < 0 ? (hours - minutes / 60) : (hours + minutes / 60)
       end
     end
 

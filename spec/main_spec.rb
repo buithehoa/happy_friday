@@ -42,7 +42,7 @@ RSpec.describe Main do
 
     it "should create an optimal schedule" do
       expect(@csv_string).to include("Moscow,Fri 09:00 AM - Fri 01:00 PM,Fri 06:00 AM - Fri 10:00 AM,1\n")
-      expect(@csv_string).to include("Moscow,Fri 10:00 AM - Fri 04:00 PM,Fri 10:00 AM - Fri 04:00 PM,4\n")
+      expect(@csv_string).to include("Moscow,Fri 01:00 PM - Fri 07:00 PM,Fri 10:00 AM - Fri 04:00 PM,4\n")
       expect(@csv_string).to include("London,Fri 09:00 AM - Fri 02:00 PM,Fri 09:00 AM - Fri 02:00 PM,2\n")
       expect(@csv_string).to include("London,Fri 02:00 PM - Fri 06:00 PM,Fri 02:00 PM - Fri 06:00 PM,3\n")
     end
@@ -122,4 +122,26 @@ RSpec.describe Main do
       expect(@csv_string).to include("Moscow,Fri 09:00 AM - Fri 03:30 PM,Fri 06:00 AM - Fri 12:30 PM,2\n")
     end
   end
+
+  context %(With 04_30_45_timezones:
+    04_30_45_timezones includes teams in timezones with 30-minute and 45-minute offsets) do
+
+    before(:all) do
+      @params = [
+        'spec/fixtures/files/04_30_45_timezones/performance.csv',
+        'spec/fixtures/files/04_30_45_timezones/tasks.csv',
+        'spec/fixtures/files/04_30_45_timezones/teams.csv',
+        '/tmp',
+      ]
+      schedule_and_export(@params)
+    end
+
+    it "should create an optimal schedule" do
+      expect(@csv_string).to include("Canada,Fri 09:00 AM - Fri 01:00 PM,Fri 11:30 AM - Fri 03:30 PM,1\n")
+      expect(@csv_string).to include("Afghanistan,Fri 09:00 AM - Fri 03:00 PM,Fri 04:30 AM - Fri 10:30 AM,2\n")
+      expect(@csv_string).to include("Nepal,Fri 09:00 AM - Fri 01:00 PM,Fri 03:15 AM - Fri 07:15 AM,3\n")
+      expect(@csv_string).to include("Nepal,Fri 01:00 PM - Fri 07:00 PM,Fri 07:15 AM - Fri 01:15 PM,4\n")
+    end
+  end
+
 end
