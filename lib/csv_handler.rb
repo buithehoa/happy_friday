@@ -2,6 +2,7 @@
 
 require 'csv'
 require 'matrix'
+require 'terminal-table'
 require 'time'
 require_relative 'extensions/float'
 require_relative 'scheduler/timezone_helper'
@@ -45,6 +46,14 @@ class CSVHandler
       workload.estimated_effort = Matrix.rows(rows)
       workload.timezone_offsets = timezone_offsets(teams_csv)
       workload
+    end
+
+    def pretty_print(file_path)
+      rows = []
+      CSV.foreach(file_path, headers: false, header_converters: :symbol) do |row|
+        rows << row
+      end
+      puts Terminal::Table.new(rows: rows)
     end
 
     private

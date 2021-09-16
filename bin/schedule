@@ -2,6 +2,14 @@
 
 $:.unshift(File.expand_path(File.join("..", "lib"), __dir__))
 
+require 'optparse'
 require 'main'
 
-Main.new(*ARGV).run
+options = {}
+OptionParser.new do |parser|
+  parser.on("-v", "--verbose", "Print out the exported schedule") do |p|
+    options[:verbose] = p
+  end
+end.parse!
+
+Main.new(*(ARGV << options)).run

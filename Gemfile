@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem 'terminal-table', '~> 3.0.1'
+
 gem 'rspec', '~> 3.10'
 gem 'guard-rspec', '~> 4.7.3'
 
