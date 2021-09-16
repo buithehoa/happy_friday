@@ -98,13 +98,19 @@ From the root folder of the project, execute `./bin/schedule` with parameters as
 ```sh
 ./bin/schedule <performance_csv_path> <tasks_csv_path> <teams_csv_path> <output_path>
 ```
-Here's an example using existing CSV files included in the project
+Here's an example using existing CSV files included in the project. When option `-v` is provided, the content of the exported CSV will be printed out.
 ```sh
-./bin/schedule ./spec/fixtures/files/sample_input/performance.csv spec/fixtures/files/sample_input/tasks.csv spec/fixtures/files/sample_input/teams.csv /tmp
+./bin/schedule -v ./spec/fixtures/files/sample_input/performance.csv spec/fixtures/files/sample_input/tasks.csv spec/fixtures/files/sample_input/teams.csv /tmp
 ```
 The output will be similar to the following
 ```
-Processing step count: 537
++--------+-----------------------------+-----------------------------+---------+
+| Team   | Local Time                  | UTC Time                    | Task No |
+| Moscow | Fri 09:00 AM - Fri 01:00 PM | Fri 06:00 AM - Fri 10:00 AM | 1       |
+| Moscow | Fri 01:00 PM - Fri 07:00 PM | Fri 10:00 AM - Fri 04:00 PM | 4       |
+| London | Fri 09:00 AM - Fri 02:00 PM | Fri 09:00 AM - Fri 02:00 PM | 2       |
+| London | Fri 02:00 PM - Fri 06:00 PM | Fri 02:00 PM - Fri 06:00 PM | 3       |
++--------+-----------------------------+-----------------------------+---------+
 Exported file path: /tmp/schedule-20210915-104856.csv
 ```
 The content of `/tmp/schedule-20210915-104856.csv` will be as follows
@@ -120,8 +126,8 @@ London,02:00 PM - 06:00 PM,02:00 PM - 06:00 PM,3
 To run all specs, execute `rspec`
 ```
 $ bundle exec rspec
-Finished in 0.02401 seconds (files took 0.10174 seconds to load)
-13 examples, 0 failures
+Finished in 1.13 seconds (files took 0.14603 seconds to load)
+24 examples, 0 failures
 ```
 
 ## Code Navigation
@@ -131,8 +137,9 @@ Finished in 0.02401 seconds (files took 0.10174 seconds to load)
   ```
 2. The scheduling algorithm is implemented in `Scheduler::BranchAndBound` and 2 supporting models: `Scheduler::Node` and `Scheduler::Workload` which can be found under `lib/scheduler`. The algorithm is triggered as follows in `Main`
   ```ruby
-  scheduler = Scheduler::BranchAndBound.new(workload.estimated_effort, workload.timezone_offsets)      
-  schedule = scheduler.run  
+  schedule = Scheduler::BranchAndBound.new(
+    workload.estimated_effort,
+    workload.timezone_offsets).run
   ```
 3. The functionality of `CSVHandler` class includes
   * Read input CSV files to collect input data
