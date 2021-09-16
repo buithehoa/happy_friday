@@ -52,9 +52,9 @@ class CSVHandler
     TIMEZONE_PATTERN = /\A((\+|\-)?(\d)+)\s(\w+)\z/
     NUMBER_OF_HOURS_PATTERN = /\A(\d)+ hour(s)?\z/
     TIMESTAMP_FORMAT = '%Y%m%d-%H%M%S'
-    WORKDAY_START_TIME = '09:00'
+    WORKDAY_START_TIME = '2021-09-17 09:00' # Pick any Friday
     HOUR_IN_SECONDS = 3600
-    TIME_FORMAT = '%I:%M %p'
+    TIME_FORMAT = '%a %I:%M %p'
 
     def task_ids(tasks_csv)
       CSV.foreach(tasks_csv, csv_options).map { |task| task[:task_id] }

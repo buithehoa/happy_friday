@@ -61,7 +61,7 @@ module Scheduler
       if completed_on_time?(assignments, timezone_offsets)
         assignments
       else
-        raise SchedulingException.new("It's not feasible to schedule tasks to be completed on Friday.")
+        raise SchedulingException.new("It's not feasible for teams to complete tasks on Friday.")
       end
     end
 
@@ -76,7 +76,7 @@ module Scheduler
           local_end_time = local_end_time + (task_effort * HOUR_IN_SECONDS)
         end
 
-        local_start_time.utc.to_date === local_end_time.utc.to_date
+        local_start_time.wday === local_end_time.utc.wday
       end
     end
 

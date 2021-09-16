@@ -36,10 +36,10 @@ RSpec.describe Main do
     end
 
     it "should create an optimal schedule" do
-      expect(@csv_string).to include("Moscow,09:00 AM - 01:00 PM,06:00 AM - 10:00 AM,1\n")
-      expect(@csv_string).to include("Moscow,10:00 AM - 04:00 PM,10:00 AM - 04:00 PM,4\n")
-      expect(@csv_string).to include("London,09:00 AM - 02:00 PM,09:00 AM - 02:00 PM,2\n")
-      expect(@csv_string).to include("London,02:00 PM - 06:00 PM,02:00 PM - 06:00 PM,3\n")
+      expect(@csv_string).to include("Moscow,Fri 09:00 AM - Fri 01:00 PM,Fri 06:00 AM - Fri 10:00 AM,1\n")
+      expect(@csv_string).to include("Moscow,Fri 10:00 AM - Fri 04:00 PM,Fri 10:00 AM - Fri 04:00 PM,4\n")
+      expect(@csv_string).to include("London,Fri 09:00 AM - Fri 02:00 PM,Fri 09:00 AM - Fri 02:00 PM,2\n")
+      expect(@csv_string).to include("London,Fri 02:00 PM - Fri 06:00 PM,Fri 02:00 PM - Fri 06:00 PM,3\n")
     end
   end
 
@@ -59,8 +59,29 @@ RSpec.describe Main do
     end
 
     it "should write a message to stdout" do
-      message = "[Scheduler::SchedulingException] It's not feasible to schedule tasks to be completed on Friday.\n"
+      message = "[Scheduler::SchedulingException] It's not feasible for teams to complete tasks on Friday.\n"
       expect { Main.new(*@params).run }.to output(message).to_stdout
+    end
+  end
+
+  context %(With 01_early_timezones:
+    01_early_timezones includes teams at early timezones.
+    Early timezones allow the teams to handle more work.) do
+
+    before(:all) do
+      @params = [
+        'spec/fixtures/files/01_early_timezones/performance.csv',
+        'spec/fixtures/files/01_early_timezones/tasks.csv',
+        'spec/fixtures/files/01_early_timezones/teams.csv',
+        '/tmp',
+      ]
+      schedule_and_export(@params)
+    end
+
+    it "should create an optimal schedule" do
+      expect(@csv_string).to include("Papua New Guinea,Fri 09:00 AM - Sat 01:00 AM,Thu 11:00 PM - Fri 03:00 PM,1\n")
+      expect(@csv_string).to include("Solomon Islands,Fri 09:00 AM - Sat 01:00 AM,Thu 10:00 PM - Fri 02:00 PM,2\n")
+      expect(@csv_string).to include("Fiji,Fri 09:00 AM - Sat 01:00 AM,Thu 11:00 PM - Fri 03:00 PM,3\n")
     end
   end
 end
